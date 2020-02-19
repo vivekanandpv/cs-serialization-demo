@@ -21,7 +21,11 @@ namespace SerializationDemo
             //  are serializable as they already have the [Serializable] attribute already applied.
 
             //  All fields irrespective of their access-level are serialized, Properties are serialized
-            //  by actually serializing their backing fields
+            //  by actually serializing their backing fields. However, the problem may surface for auto properties
+            //  The reason is the backing field is generated at the runtime by the compiler and this may be different
+            //  for the deserialization, particularly if deserialization happens outside the assembly.
+            //  At any rate, this automatic property serialization cannot be relied upon.
+            //  In such cases, ISerializable is necessary.
 
             //  Child classes do not inherit the Serializable of the parent. Apply explicitly.
 
