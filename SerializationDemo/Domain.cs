@@ -10,31 +10,32 @@ namespace SerializationDemo
     [Serializable]
     abstract class Book
     {
-        public int Id;
-        public string Title;
+        public int Id { get; set; }
+        public string Title { get; set; }
 
-        public Author Author;
+        public Author Author { get; set; }
     }
 
     [Serializable]
     internal class Author
     {
-        public string Name;
-        public string Email;
+        public string Name { get; set; }
+        public string Email { get; set; }
     }
 
     [Serializable]
     class Publisher
     {
-        public string Name;
-        public string Country;
+        
+        public string Name { get; set; }
+        public string Country { get; set; }
     }
 
     [Serializable]
     class Novel:Book
     {
-        public int Pages;
-        public int Edition;
-        public Publisher Publisher;
+        public int Pages { get; set; }
+        public int Edition { get; set; }
+        public Publisher Publisher { get; set; }
     }
 }

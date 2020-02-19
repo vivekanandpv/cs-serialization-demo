@@ -39,6 +39,7 @@ namespace SerializationDemo
 
             serializationStream.Position = 0;
 
+            //  this will not have publisher's name deserialized
             var deserializedNovel = Deserialize<Novel>(serializationStream, soapFormatter);
         }
 
