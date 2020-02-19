@@ -11,12 +11,12 @@ namespace SerializationDemo
     abstract class Book
     {
         public int Id;
-        public string Title;
+        public string Title { get; set; }
 
         public Author Author;
     }
 
-    
+    [Serializable]
     internal class Author
     {
         
