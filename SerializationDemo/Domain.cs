@@ -16,7 +16,7 @@ namespace SerializationDemo
         public Author Author { get; set; }
     }
 
-    [Serializable]
+    
     internal class Author
     {
         public string Name { get; set; }

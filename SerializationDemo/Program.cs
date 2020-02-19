@@ -15,6 +15,10 @@ namespace SerializationDemo
     {
         static void Main(string[] args)
         {
+            //  Now, Author doesn't have Serializable attribute. The formatter is unaware of this,
+            //  till the time it tries to serialize the object graph. At this time, part of the novel
+            //  is serialized. Hence the corruption in underlying memory stream. Therefore an exception
+            //  is thrown.
             var publisher = new Publisher
             {
                 Name = "Publisher One",
