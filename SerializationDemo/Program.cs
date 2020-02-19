@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,25 +13,45 @@ namespace SerializationDemo
     {
         static void Main(string[] args)
         {
-            //  Serialization formatters should implement IFormatter interface
-            //  Type fidelity is preserved in binary serialization, but not in Xml serialization
-            //  Custom types such as classes, generic classes, enums, structs can be serialized
-            //  This should be done by applying [Serializable] attribute, failing to which
-            //  produces SerializationException.
+            var novel1 = new Novel
+            {
+                Author = new Author { Email = "author@domain.com", Name = "Author One" },
+                Edition = 12,
+                Id = 1234,
+                Pages = 300,
+                Publisher = new Publisher
+                {
+                    Name = "Publisher One",
+                    Country = "India"
+                },
+                Title = "Some Good Novel"
+            };
 
-            //  All primitive types, non-generic and generic collection types, delegates, and enums
-            //  are serializable as they already have the [Serializable] attribute already applied.
+            var serializationStream = Serialize(novel1);
+            var streamReaderInstance = new StreamReader(serializationStream);
 
-            //  All fields irrespective of their access-level are serialized, but not the properties
-            //  unless explicitly told so.
+            Console.WriteLine(streamReaderInstance.ReadToEnd());
 
-            //  Child classes do not inherit the Serializable of the parent. Apply explicitly.
+            serializationStream.Position = 0;
 
-            //  If the base-class is not marked as Serializable, then the child class cannot apply
-            //  Serializable either! It could be due to a design decision or the base class implementer
-            //  forgot. In such cases the implementation of ISerializable interface becomes a necessity.
+            var deserializedNovel = Deserialize<Novel>(serializationStream);
+        }
 
-            //  Please note that object is marked as Serializable!
+        static Stream Serialize<T>(T source)
+        {
+            var memoryStream = new MemoryStream();
+            var formatter = new BinaryFormatter();
+
+            formatter.Serialize(memoryStream, source);
+            memoryStream.Position = 0;
+
+            return memoryStream;
+        }
+
+        static T Deserialize<T>(Stream serializationStream)
+        {
+            var formatter = new BinaryFormatter();
+            return (T)formatter.Deserialize(serializationStream);
         }
     }
 }
