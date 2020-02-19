@@ -20,8 +20,8 @@ namespace SerializationDemo
             //  All primitive types, non-generic and generic collection types, delegates, and enums
             //  are serializable as they already have the [Serializable] attribute already applied.
 
-            //  All fields irrespective of their access-level are serialized, but not the properties
-            //  unless explicitly told so.
+            //  All fields irrespective of their access-level are serialized, Properties are serialized
+            //  by actually serializing their backing fields
 
             //  Child classes do not inherit the Serializable of the parent. Apply explicitly.
 
