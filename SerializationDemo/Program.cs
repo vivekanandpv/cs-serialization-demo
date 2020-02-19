@@ -40,6 +40,8 @@ namespace SerializationDemo
             //  IFormatter binaryFormatter = new BinaryFormatter();
 
             var serializationStream = Serialize(novel1, soapFormatter);
+
+            //  now that the serializationStream will be null, this line throws argument null exception
             var streamReaderInstance = new StreamReader(serializationStream);
 
             Console.WriteLine(streamReaderInstance.ReadToEnd());
@@ -57,8 +59,16 @@ namespace SerializationDemo
         static Stream Serialize<T>(T source, IFormatter formatter)
         {
             var memoryStream = new MemoryStream();
-            formatter.Serialize(memoryStream, source);
-            memoryStream.Position = 0;
+            try
+            {
+                formatter.Serialize(memoryStream, source);
+                memoryStream.Position = 0;
+            }
+            catch (SerializationException se)
+            {
+                memoryStream = null;
+                //  You may also consider rethrowing the exception
+            }
 
             return memoryStream;
         }
@@ -68,4 +78,6 @@ namespace SerializationDemo
             return (T)formatter.Deserialize(serializationStream);
         }
     }
+
+    
 }
