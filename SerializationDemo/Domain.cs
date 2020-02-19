@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace SerializationDemo
 {
-    //  We know from language that Novel inherits from Book, but deserializer doesn't store the type information
-    //  So, we should annotate the Book, that it knows about Novel
-    [DataContract, KnownType(typeof(Novel))]
+    //  Now that we have a resolver in place, known type is not required.
+    //  the rationale behind resolver is to determine the known type dynamically
+    [DataContract]
     abstract class Book
     {
         [DataMember]

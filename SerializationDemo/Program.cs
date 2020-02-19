@@ -7,6 +7,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace SerializationDemo
 {
@@ -28,8 +29,9 @@ namespace SerializationDemo
                 },
                 Title = "Some Good Novel"
             };
-
-            var serializationStream = Serialize(novelAsBook);
+            
+            var serializer = new DataContractSerializer(typeof(Book), null, int.MaxValue, false, false, null, new NovelResolver());
+            var serializationStream = Serialize(novelAsBook, serializer);
             var streamReaderInstance = new StreamReader(serializationStream);
 
             Console.WriteLine(streamReaderInstance.ReadToEnd());
@@ -37,13 +39,12 @@ namespace SerializationDemo
             serializationStream.Position = 0;
 
             //  This is now polymorphic. Type is Book but implementation is Novel
-            var deserializedNovel = Deserialize<Book>(serializationStream);
+            var deserializedNovel = Deserialize(serializationStream, serializer);
         }
 
-        static Stream Serialize<T>(T source)
+        static Stream Serialize(Book source, DataContractSerializer serializer)
         {
             var memoryStream = new MemoryStream();
-            var serializer = new DataContractSerializer(typeof(T));
 
             serializer.WriteObject(memoryStream, source);
             memoryStream.Position = 0;
@@ -51,10 +52,40 @@ namespace SerializationDemo
             return memoryStream;
         }
 
-        static T Deserialize<T>(Stream serializationStream)
+        static Book Deserialize(Stream serializationStream, DataContractSerializer serializer)
         {
-            var serializer = new DataContractSerializer(typeof(T));
-            return (T) serializer.ReadObject(serializationStream);
+            return (Book)serializer.ReadObject(serializationStream);
+        }
+    }
+
+    class NovelResolver : DataContractResolver
+    {
+        public override bool TryResolveType(Type type, Type declaredType, DataContractResolver knownTypeResolver,
+            out XmlDictionaryString typeName, out XmlDictionaryString typeNamespace)
+        {
+            if (type == typeof(Novel))
+            {
+                var dictionary = new XmlDictionary();
+                typeName = dictionary.Add("Novel");
+                typeNamespace = dictionary.Add("SerializationDemo");
+                return true;
+            }
+            else
+            {
+                return knownTypeResolver.TryResolveType(type, declaredType, null, out typeName, out typeNamespace);
+            }
+        }
+
+        public override Type ResolveName(string typeName, string typeNamespace, Type declaredType, DataContractResolver knownTypeResolver)
+        {
+            if (typeName == "Novel" && typeNamespace == "SerializationDemo")
+            {
+                return typeof(Novel);
+            }
+            else
+            {
+                return knownTypeResolver.ResolveName(typeName, typeNamespace, declaredType, null);
+            }
         }
     }
 }
