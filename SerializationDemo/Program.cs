@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization.Formatters.Soap;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,30 +29,30 @@ namespace SerializationDemo
                 Title = "Some Good Novel"
             };
 
-            var serializationStream = Serialize(novel1);
+            IFormatter soapFormatter = new SoapFormatter();
+            //  IFormatter binaryFormatter = new BinaryFormatter();
+
+            var serializationStream = Serialize(novel1, soapFormatter);
             var streamReaderInstance = new StreamReader(serializationStream);
 
             Console.WriteLine(streamReaderInstance.ReadToEnd());
 
             serializationStream.Position = 0;
 
-            var deserializedNovel = Deserialize<Novel>(serializationStream);
+            var deserializedNovel = Deserialize<Novel>(serializationStream, soapFormatter);
         }
 
-        static Stream Serialize<T>(T source)
+        static Stream Serialize<T>(T source, IFormatter formatter)
         {
             var memoryStream = new MemoryStream();
-            var formatter = new BinaryFormatter();
-
             formatter.Serialize(memoryStream, source);
             memoryStream.Position = 0;
 
             return memoryStream;
         }
 
-        static T Deserialize<T>(Stream serializationStream)
+        static T Deserialize<T>(Stream serializationStream, IFormatter formatter)
         {
-            var formatter = new BinaryFormatter();
             return (T)formatter.Deserialize(serializationStream);
         }
     }
