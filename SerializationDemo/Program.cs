@@ -15,7 +15,7 @@ namespace SerializationDemo
     {
         static void Main(string[] args)
         {
-            var novel1 = new Novel
+            Book novelAsBook = new Novel
             {
                 Author = new Author { Email = "author@domain.com", Name = "Author One" },
                 Edition = 12,
@@ -29,14 +29,15 @@ namespace SerializationDemo
                 Title = "Some Good Novel"
             };
 
-            var serializationStream = Serialize(novel1);
+            var serializationStream = Serialize(novelAsBook);
             var streamReaderInstance = new StreamReader(serializationStream);
 
             Console.WriteLine(streamReaderInstance.ReadToEnd());
 
             serializationStream.Position = 0;
 
-            var deserializedNovel = Deserialize<Novel>(serializationStream);
+            //  This is now polymorphic. Type is Book but implementation is Novel
+            var deserializedNovel = Deserialize<Book>(serializationStream);
         }
 
         static Stream Serialize<T>(T source)
