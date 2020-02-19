@@ -34,6 +34,8 @@ namespace SerializationDemo
             //  forgot. In such cases the implementation of ISerializable interface becomes a necessity.
 
             //  Please note that object is marked as Serializable!
+
+            //  Also note that deserialization bypasses the constructor and initializer mechanisms!
         }
     }
 }
