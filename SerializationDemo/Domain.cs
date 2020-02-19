@@ -2,23 +2,27 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SerializationDemo
 {
-    [Serializable]
+    [DataContract]
     abstract class Book
     {
+        [DataMember]
         public int Id;
+        [DataMember]
         public string Title;
-
+        [DataMember]
         public Author Author;
     }
 
-    [Serializable]
+    [DataContract]
     internal class Author
     {
+        [DataMember]
         public string Name;
         public string Email;
     }
@@ -26,15 +30,18 @@ namespace SerializationDemo
     [Serializable]
     class Publisher
     {
+        
         public string Name;
         public string Country;
     }
 
-    [Serializable]
+    [DataContract]
     class Novel:Book
     {
+        [DataMember]
         public int Pages;
         public int Edition;
+        [DataMember]
         public Publisher Publisher;
     }
 }

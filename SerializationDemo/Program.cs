@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -40,9 +42,9 @@ namespace SerializationDemo
         static Stream Serialize<T>(T source)
         {
             var memoryStream = new MemoryStream();
-            var formatter = new BinaryFormatter();
+            var serializer = new DataContractSerializer(typeof(T));
 
-            formatter.Serialize(memoryStream, source);
+            serializer.WriteObject(memoryStream, source);
             memoryStream.Position = 0;
 
             return memoryStream;
@@ -50,8 +52,8 @@ namespace SerializationDemo
 
         static T Deserialize<T>(Stream serializationStream)
         {
-            var formatter = new BinaryFormatter();
-            return (T)formatter.Deserialize(serializationStream);
+            var serializer = new DataContractSerializer(typeof(T));
+            return (T) serializer.ReadObject(serializationStream);
         }
     }
 }
