@@ -31,11 +31,14 @@ namespace SerializationDemo
         public string Country { get; set; }
     }
 
+    
+
     [Serializable]
     class Novel:Book
     {
         public int Pages { get; set; }
         public int Edition { get; set; }
         public Publisher Publisher { get; set; }
+        public Publisher Promoter { get; set; }
     }
 }

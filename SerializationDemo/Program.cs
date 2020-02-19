@@ -15,17 +15,20 @@ namespace SerializationDemo
     {
         static void Main(string[] args)
         {
+            var publisher = new Publisher
+            {
+                Name = "Publisher One",
+                Country = "India"
+            };
+
             var novel1 = new Novel
             {
                 Author = new Author { Email = "author@domain.com", Name = "Author One" },
                 Edition = 12,
                 Id = 1234,
                 Pages = 300,
-                Publisher = new Publisher
-                {
-                    Name = "Publisher One",
-                    Country = "India"
-                },
+                Publisher =  publisher,
+                Promoter = publisher,
                 Title = "Some Good Novel"
             };
 
@@ -41,6 +44,10 @@ namespace SerializationDemo
 
             //  this will not have publisher's name deserialized
             var deserializedNovel = Deserialize<Novel>(serializationStream, soapFormatter);
+
+            //  By default, the reference integrity is preserved in binary and soap serialization
+            //  this is a significant gain in performance in larger object graphs
+            Console.WriteLine(object.ReferenceEquals(deserializedNovel.Publisher, deserializedNovel.Promoter));
         }
 
         static Stream Serialize<T>(T source, IFormatter formatter)
