@@ -12,14 +12,13 @@ namespace SerializationDemo
     {
         public int Id;
         public string Title { get; set; }
-
+        [NonSerialized]
         public Author Author;
     }
 
     [Serializable]
     internal class Author
     {
-        
         public string Name;
         public string Email;
     }
@@ -27,6 +26,7 @@ namespace SerializationDemo
     [Serializable]
     class Publisher
     {
+        [NonSerialized]
         public string Name;
         public string Country;
     }
